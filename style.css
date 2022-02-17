@@ -1,0 +1,72 @@
+.menu-container {
+    position: relative;
+}
+
+.button-container-p {
+    width: 100%;
+    background: gray;
+    overflow-y: auto;
+    /*position: absolute;*/
+    margin-top: 15px;
+}
+
+.button-container-c {
+    width: 100%;
+    background: gray;
+    overflow-y: auto;
+    /*position: absolute;*/
+    margin-top: 25px;
+}
+
+a {
+    width: 80px;
+    height: auto;
+    max-height: 100px;
+    min-height: 80px;
+
+    float: left;
+    background: lightgray;   
+    margin: 7px 8px;
+    padding: 0px 0px;
+
+    text-align: center;
+    text-decoration: underline;
+    overflow-wrap: break-word;
+    text-overflow: ellipsis;
+    color: blue;
+
+    cursor: pointer;
+}
+
+.button-container-p > a {
+    min-height: 45px;
+}
+
+#container {
+    height: 500px;
+}
+
+@media only screen and (min-width: 1440px) {
+
+    .menu-container {
+        position: absolute;
+    }
+    
+    .button-container-p {
+        /*float: left;*/
+        position: relative;
+        width: 40%;
+    }
+
+    .button-container-c {
+        position: relative;
+        width: 40%;
+    }
+    
+    #container {
+        float: right;
+        position: relative;
+        top: 0px;
+        width: 59%;
+    }
+}
