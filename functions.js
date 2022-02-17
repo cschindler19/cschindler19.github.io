@@ -62,7 +62,7 @@ function resetVariables() {
 function upload(e) {
     resetVariables();
 
-    console.log("Uploading .csv File");
+    console.log("Uploading .CSV File");
     var csvFile = e.target.files[0];
 
     var reader = new FileReader();
@@ -172,7 +172,6 @@ function gatherPlayerData(event) {
         for(var i = 0; i < fData.length; i++) {
             // If the data matches the player name and course then add the course and break out
             if(fData[i].PlayerName == playerClicked && fData[i]["CourseName"] == item) {
-                //console.log(playerClicked + " has played " + fData[i].CourseName);
                 playerCourseList.push(fData[i].CourseName);
                 break;
             }                                     
@@ -189,7 +188,6 @@ function gatherPlayerData(event) {
 function gatherCourseData(event) {
     // This just gets which player was clicked
     courseClicked = event.path[0].innerHTML;
-    console.log(event.path[0].innerHTML);
 
     generateData();
 }
@@ -214,7 +212,6 @@ function generateData(event) {
     // See if the current course is in the list
     if(!playerCourseList.includes(courseClicked) && courseClicked != "All") {
         courseClicked = playerCourseList[0];
-        console.log("This better not")
     }
 
 
