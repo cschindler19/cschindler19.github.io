@@ -38,6 +38,14 @@ a {
     cursor: pointer;
 }
 
+img {
+    float: left;
+}
+
+h1 {
+    position: relative;
+}
+
 .button-container-p > a {
     min-height: 45px;
 }
