@@ -296,8 +296,7 @@ function statisticalAnalysis(sdata) {
         var iter = sdata[i][2];
         for(var j = 0; j < iter.length; j++) { 
             if(iter[j] == '') {
-                var temp = [...iter];
-                holesFormatted.push(temp.splice(0, j));
+                holesFormatted.push([...iter].splice(0, j));
                 //console.log("J: " + j + " -> " + holesFormatted[holesFormatted.length-1]);
                 break;
             }
