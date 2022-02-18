@@ -214,7 +214,10 @@ function generateData(event) {
         courseClicked = playerCourseList[0];
     }
 
-
+    // Create a variable to hold our wanted stats
+    //  total, score(+/-), holes
+    var statData = [];
+    
     anychart.onDocumentReady(function() {
         // Gather the appropriate data
         let r = [];
@@ -225,14 +228,16 @@ function generateData(event) {
         if(courseClicked != "All") {
             for(var i = fData.length - 1; i > 0; i--) {
                 if(fData[i]["PlayerName"] == playerClicked && fData[i]["CourseName"] == courseClicked) {
-                    r.push([fData[i]["Date"], fData[i]["Total"], (fData[i]["Total"] - fData[i]["+/-"])])
+                    r.push([fData[i]["Date"], fData[i]["Total"], (fData[i]["Total"] - fData[i]["+/-"])]);
+                    statData.push([fData[i]["Total"], fData[i]["+/-"], fData[i]["Holes"]]);
                     index++;
                 }
             }
         } else if(courseClicked == "All") {
             for(var i = fData.length - 1; i > 0; i--) {
                 if(fData[i]["PlayerName"] == playerClicked) {
-                    r.push([fData[i]["Date"] + " @ " + fData[i]["CourseName"], fData[i]["Total"], (fData[i]["Total"] - fData[i]["+/-"])])
+                    r.push([fData[i]["Date"] + " @ " + fData[i]["CourseName"], fData[i]["Total"], (fData[i]["Total"] - fData[i]["+/-"])]);
+                    statData.push([fData[i]["Total"], fData[i]["+/-"], fData[i]["Holes"]]);
                     index++;
                 }
             }
@@ -263,7 +268,58 @@ function generateData(event) {
         // draw
         chart.container("container");
         chart.draw();
+
+        statisticalAnalysis(statData);
     });
+}
+
+function statisticalAnalysis(sdata) {
+    var textLocation = document.getElementById("statsLoc");
+    textLocation.style.display = "block";
+
+    var pElem;
+    if(textLocation.childElementCount == 0) {
+        pElem = document.createElement("p");
+        textLocation.appendChild(pElem);
+    } else {
+        pElem = textLocation.children[0];
+    }
+
+    var throwsPerHole = 0;
+    var averageThrowsPerHole = 0;
+    var holesPlayed = 0;
+    var squaredThrows = 0;
+    var standardDeviationPerHole = 0;
+
+    var holesFormatted = [];
+    for(var i = 0; i < sdata.length; i++) {
+        var iter = sdata[i][2];
+        for(var j = 0; j < iter.length; j++) { 
+            if(iter[j] == '') {
+                var temp = [...iter];
+                holesFormatted.push(temp.splice(0, j));
+                //console.log("J: " + j + " -> " + holesFormatted[holesFormatted.length-1]);
+                break;
+            }
+        
+        }
+    }
+    //console.table(holesFormatted);
+
+    for(var i = 0; i < holesFormatted.length; i++) {
+        for(var j = 0; j < holesFormatted[i].length; j++) {
+            throwsPerHole += parseInt(holesFormatted[i][j]);
+            holesPlayed++;
+            squaredThrows += parseInt(holesFormatted[i][j]) * parseInt(holesFormatted[i][j]);
+        }
+    }
+
+    averageThrowsPerHole = throwsPerHole / holesPlayed;
+    averageThrowsPerHole = Math.round((averageThrowsPerHole + Number.EPSILON) * 100) / 100;
+    standardDeviationPerHole = ((holesPlayed * squaredThrows) - (throwsPerHole * throwsPerHole)) / (holesPlayed * (holesPlayed - 1));
+    standardDeviationPerHole = Math.sqrt(standardDeviationPerHole);
+    pElem.innerHTML = "Average Throws Per Hole: " + averageThrowsPerHole;
+    pElem.innerHTML += "<br>Standard Deviation: " + standardDeviationPerHole;
 
 }
 

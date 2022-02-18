@@ -54,6 +54,10 @@ h1 {
     height: 500px;
 }
 
+#statsLoc {
+    border: black 2px solid;
+}
+
 @media only screen and (min-width: 1440px) {
 
     .menu-container {
@@ -75,6 +79,13 @@ h1 {
         float: right;
         position: relative;
         top: 0px;
+        width: 59%;
+    }
+
+    #statsLoc {
+        float: right;
+        position: relative;
+        top: 600px;
         width: 59%;
     }
 }
