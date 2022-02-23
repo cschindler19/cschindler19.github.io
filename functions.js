@@ -291,6 +291,9 @@ function statisticalAnalysis(sdata) {
     var squaredThrows = 0;
     var standardDeviationPerHole = 0;
 
+    var handiAVG = 0;
+
+    // Create a list of all the holes played
     var holesFormatted = [];
     for(var i = 0; i < sdata.length; i++) {
         var iter = sdata[i][2];
@@ -302,9 +305,21 @@ function statisticalAnalysis(sdata) {
             }
         
         }
+        // Gather data for the handicap
+        if(sdata.length >= 5 && i > (sdata.length - 5)) {
+            handiAVG += parseInt(sdata[i][1]);
+        }
+    }
+
+    // Handicap calculations
+    if(sdata.length < 5) {
+        handiAVG = "Not enough rounds"
+    } else {
+        handiAVG = round((handiAVG / 5) * 0.9, 2);
     }
     //console.table(holesFormatted);
 
+    // Do the math on the holes to get stats from it
     for(var i = 0; i < holesFormatted.length; i++) {
         for(var j = 0; j < holesFormatted[i].length; j++) {
             throwsPerHole += parseInt(holesFormatted[i][j]);
@@ -313,13 +328,21 @@ function statisticalAnalysis(sdata) {
         }
     }
 
+    // Calculate the Average Throws
     averageThrowsPerHole = throwsPerHole / holesPlayed;
-    averageThrowsPerHole = Math.round((averageThrowsPerHole + Number.EPSILON) * 100) / 100;
+    averageThrowsPerHole = round(averageThrowsPerHole, 2);
+    // Caclulate the Standard Deviation
     standardDeviationPerHole = ((holesPlayed * squaredThrows) - (throwsPerHole * throwsPerHole)) / (holesPlayed * (holesPlayed - 1));
-    standardDeviationPerHole = Math.sqrt(standardDeviationPerHole);
+    standardDeviationPerHole = round(Math.sqrt(standardDeviationPerHole), 4);
+   
+    // Add all of the stats to the stats block on the page
     pElem.innerHTML = "Average Throws Per Hole: " + averageThrowsPerHole;
     pElem.innerHTML += "<br>Standard Deviation: " + standardDeviationPerHole;
+    pElem.innerHTML += "<br>Handicap: " + handiAVG;
+}
 
+function round(num, decimals) {
+    return Math.round((num + Number.EPSILON) * (Math.pow(10, decimals))) / (Math.pow(10, decimals));
 }
 
 
