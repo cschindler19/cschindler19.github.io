@@ -15,6 +15,10 @@ let course = "";
 // The chart to be displayed
 var chart;
 
+// Slider information
+var old_bottomEnd;
+var old_topEnd;
+
 // What button has been clicked
 var playerClicked = "Par";
 var courseClicked = "All";
@@ -229,7 +233,7 @@ function generateData(event) {
             for(var i = fData.length - 1; i > 0; i--) {
                 if(fData[i]["PlayerName"] == playerClicked && fData[i]["CourseName"] == courseClicked) {
                     r.push([fData[i]["Date"], fData[i]["Total"], (fData[i]["Total"] - fData[i]["+/-"])]);
-                    statData.push([fData[i]["Total"], fData[i]["+/-"], fData[i]["Holes"]]);
+                    statData.push([fData[i]["Total"], fData[i]["+/-"], fData[i]["Holes"], fData[i]["Date"]]);
                     index++;
                 }
             }
@@ -237,7 +241,7 @@ function generateData(event) {
             for(var i = fData.length - 1; i > 0; i--) {
                 if(fData[i]["PlayerName"] == playerClicked) {
                     r.push([fData[i]["Date"] + " @ " + fData[i]["CourseName"], fData[i]["Total"], (fData[i]["Total"] - fData[i]["+/-"])]);
-                    statData.push([fData[i]["Total"], fData[i]["+/-"], fData[i]["Holes"]]);
+                    statData.push([fData[i]["Total"], fData[i]["+/-"], fData[i]["Holes"], fData[i]["Date"]]);
                     index++;
                 }
             }
@@ -265,12 +269,22 @@ function generateData(event) {
         var xZoom = chart.xZoom();
         xZoom.setToValues(0, index);
 
+        console.log("Top: " + chart.xZoom().b + "\tBottom: " + chart.xZoom.g);
+
         // draw
         chart.container("container");
         chart.draw();
 
+        
+        chart.listen("mouseUp", function() {
+            handleSliderUpdate(statData, chart.xZoom().g, chart.xZoom().b);
+        });
+
+
         statisticalAnalysis(statData);
+
     });
+
 }
 
 function statisticalAnalysis(sdata) {
@@ -336,13 +350,32 @@ function statisticalAnalysis(sdata) {
     standardDeviationPerHole = round(Math.sqrt(standardDeviationPerHole), 4);
    
     // Add all of the stats to the stats block on the page
-    pElem.innerHTML = "Average Throws Per Hole: " + averageThrowsPerHole;
+    pElem.innerHTML = "<span>" + (sdata[0][3]).split(" ")[0] + " - " + (sdata[sdata.length - 1][3]).split(" ")[0] + "</span>"; // Change so it shows the date range
+    pElem.innerHTML += "Average Throws Per Hole: " + averageThrowsPerHole;
     pElem.innerHTML += "<br>Standard Deviation: " + standardDeviationPerHole;
     pElem.innerHTML += "<br>Handicap: " + handiAVG;
 }
 
 function round(num, decimals) {
     return Math.round((num + Number.EPSILON) * (Math.pow(10, decimals))) / (Math.pow(10, decimals));
+}
+
+function handleSliderUpdate(_data, bottom, top) {
+    if(bottom != old_bottomEnd || top != old_topEnd) {
+        // Update old stats
+        old_bottomEnd = bottom;
+        old_topEnd = top;
+
+        var size = _data.length - 0;
+
+        var new_bottom_pos = round(size * bottom, 0);
+        var new_top_pos = round(size * top, 0) - 1;
+
+        // Trim the data to the new positions
+        new_data = _data.slice(new_bottom_pos, new_top_pos);
+
+        statisticalAnalysis(new_data);
+    }
 }
 
 

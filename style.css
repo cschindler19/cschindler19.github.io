@@ -62,6 +62,15 @@ h1 {
     border: black 2px solid;
 }
 
+span {
+    display: inline-block;
+    position: relative;
+    float: right;
+    top: -27px;
+    left: -50%;
+    background-color:#ffffff;
+}
+
 @media only screen and (min-width: 1440px) {
 
     .menu-container {
