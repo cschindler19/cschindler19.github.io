@@ -350,7 +350,7 @@ function statisticalAnalysis(sdata) {
     standardDeviationPerHole = round(Math.sqrt(standardDeviationPerHole), 4);
    
     // Add all of the stats to the stats block on the page
-    pElem.innerHTML = "<span>" + (sdata[0][3]).split(" ")[0] + " - " + (sdata[sdata.length - 1][3]).split(" ")[0] + "</span>"; // Change so it shows the date range
+    pElem.innerHTML = "<span>" + (sdata[0][3]).split(" ")[0] + " :: " + (sdata[sdata.length - 1][3]).split(" ")[0] + "</span>"; // Change so it shows the date range
     pElem.innerHTML += "Average Throws Per Hole: " + averageThrowsPerHole;
     pElem.innerHTML += "<br>Standard Deviation: " + standardDeviationPerHole;
     pElem.innerHTML += "<br>Handicap: " + handiAVG;
